@@ -40,24 +40,27 @@ function registerChangeStream(db, collectionName) {
         // console.log(change.fullDocument);
           
         if(change.operationType === 'insert') {
-          const doc = change.fullDocument;
-          console.log('emit');
-          io.emit(
-            `${collectionName}.inserted`,
-            doc
-          );
-        } else if(change.operationType === 'update') {
             const doc = change.fullDocument;
-            console.log('emit');
+            console.log('emit insert');
+            io.emit(
+                `${collectionName}.inserted`,
+                doc
+            );
+        } else if(change.operationType === 'update' || change.operationType === 'replace') {
+            const doc = change.fullDocument;
+            console.log('emit update/replace');
              io.emit(
                 `${collectionName}.updated`,
                 doc
             );
         } else if(change.operationType === 'delete') {
-          io.emit(
-            `${collectionName}.inserted`,
-            change.documentKey._id
-          );
+            console.log('emit delete');
+            io.emit(
+                `${collectionName}.deleted`,
+                change.documentKey._id
+            );
+        } else {
+            console.log('unhandled operationType: ' + change.operationType);
         }
       });
 }
