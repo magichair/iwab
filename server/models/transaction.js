@@ -3,6 +3,7 @@ const Schema   = mongoose.Schema;
 
 const transactionSchema = new Schema({ 
   date:         { type: Date },
+  payee:        String,
   budget:       String,
   description:  String,
   inflow:       Number, // in cents

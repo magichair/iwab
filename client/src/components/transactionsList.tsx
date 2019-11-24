@@ -1,11 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.css';
 
 import * as React from 'react';
-import { ListGroup, ListGroupItem } from 'reactstrap';
+import { Spinner, Alert, Table } from 'reactstrap';
 import io from "socket.io-client";
+import { Transaction } from '../types';
 
 interface State {
-    transactions: any[],
+    transactions: Transaction[],
     loading: boolean,
     error: boolean
 }
@@ -63,18 +64,49 @@ export default class TransactionsList extends React.Component<{}, State> {
 
         const { transactions, loading, error } = this.state;
 
-        const transactionsListItems = transactions.map((transaction:any) => {
-            return <ListGroupItem color="info" key={transaction._id}>{transaction.description}</ListGroupItem>
+        const transactionsListItems = transactions.map((transaction:Transaction) => {
+            return (
+            <tr color="info" key={transaction._id}>
+                <th>{transaction.date}</th>
+                <th>{transaction.payee}</th>
+                <th>{transaction.budget}</th>
+                <th>{transaction.description}</th>
+                <th>{transaction.inflow}</th>
+                <th>{transaction.outflow}</th>
+                <th>{transaction.cleared}</th>
+            </tr>
+            );
         })
 
 
         return (
         <div>
-            {loading && <div>Loading...</div>}
+            {loading && <div><Spinner color="primary" /></div>}
             {!loading && !error && 
-                <ListGroup>{transactionsListItems}</ListGroup>
+            <div>
+                <Table striped bordered size="sm">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Payee</th>
+                            <th>Budget</th>
+                            <th>Description</th>
+                            <th>Inflow</th>
+                            <th>Outflow</th>
+                            <th>Cleared</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {transactionsListItems}
+                    </tbody>
+                </Table>
+            </div>
             }
-            {error && <div>Error message</div>}
+            {error && 
+                <div>
+                    <Alert color="danger">Error Loading Transactions</Alert>
+                </div>
+            }
         </div>
         );
   }
