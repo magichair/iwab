@@ -19,7 +19,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/transactions', transactionsApi);
 
-mongoose.connect('mongodb://localhost', {dbName:'iwab', replicaSet:'rs', useNewUrlParser: true});
+const mongo_hostname = (process.env.MONGO_HOSTNAME || 'localhost');
+const mongo_port = (process.env.MONGO_PORT || 27017);
+
+console.log('test ');
+
+mongoose.connect(`mongodb://${mongo_hostname}:${mongo_port}`, {dbName:'iwab', useNewUrlParser: true});
 
 const db = mongoose.connection;
 

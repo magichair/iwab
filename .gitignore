@@ -61,4 +61,4 @@ typings/
 .next
 
 # Mongo docker-compose data directory
-data/
+data/db

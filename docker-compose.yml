@@ -1,0 +1,43 @@
+version: "2"
+services:
+  client:
+    hostname: iwab-web
+    container_name: iwabweb
+    build: ./client
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    restart: always
+    volumes:
+      - ./client/src:/app/src
+  server:
+    hostname: iwab-server
+    container_name: iwabserver
+    build: ./server
+    environment:
+      - MONGO_HOSTNAME=mongo
+      - MONGO_PORT=27017
+    expose:
+      - 9000
+    ports:
+      - 9000:9000
+    restart: always
+    links:
+      - "mongo"
+    command: sh -c "sleep 10 && yarn start:dev" 
+    volumes:
+      - ./server/src:/app/src
+  mongo:
+    hostname: mongo
+    container_name: localmongo
+    image: mongo
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+    restart: always
+    command: --bind_ip_all --replSet rs
+    volumes:
+      - ./data/db:/data/db
+      - ./data/initdb:/docker-entrypoint-initdb.d:ro
