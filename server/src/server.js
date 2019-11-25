@@ -22,8 +22,6 @@ app.use('/transactions', transactionsApi);
 const mongo_hostname = (process.env.MONGO_HOSTNAME || 'localhost');
 const mongo_port = (process.env.MONGO_PORT || 27017);
 
-console.log('test ');
-
 mongoose.connect(`mongodb://${mongo_hostname}:${mongo_port}`, {dbName:'iwab', useNewUrlParser: true});
 
 const db = mongoose.connection;
